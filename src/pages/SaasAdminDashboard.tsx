@@ -32,6 +32,8 @@ import { useAuth } from '../context/AuthContext';
 import SaasOverview from '../components/saas/SaasOverview';
 import SaasTenants from '../components/saas/SaasTenants';
 import SaasPlans from '../components/saas/SaasPlans';
+import SaasEdgeNodes from '../components/saas/SaasEdgeNodes';
+import SaasSupportAccess from '../components/saas/SaasSupportAccess';
 import MetadataCrud from '../components/saas/MetadataCrud';
 
 function SaasAdminDashboard() {
@@ -93,6 +95,10 @@ function SaasAdminDashboard() {
         return <SaasTenants />;
       case 'Plans':
         return <SaasPlans />;
+      case 'Edge Nodes':
+        return <SaasEdgeNodes />;
+      case 'Support Access':
+        return <SaasSupportAccess />;
       
       // Metadata CRUDs
       case 'Roles & RBAC':
@@ -100,13 +106,12 @@ function SaasAdminDashboard() {
           <MetadataCrud 
             title="Roles & Permissions"
             entityName="Role"
+            endpoint="/roles/"
             fields={[
               { key: 'name', label: 'Role Name', type: 'text' },
               { key: 'code', label: 'Internal Code', type: 'text' },
-              { key: 'permissions', label: 'Perm. Count', type: 'number' },
-              { key: 'status', label: 'Status', type: 'status' }
+              { key: 'is_active', label: 'Status', type: 'status' }
             ]}
-            data={[]}
           />
         );
       
@@ -115,13 +120,12 @@ function SaasAdminDashboard() {
           <MetadataCrud 
             title="Clinical Departments"
             entityName="Department"
+            endpoint="/departments/"
             fields={[
               { key: 'name', label: 'Department Name', type: 'text' },
               { key: 'code', label: 'Code', type: 'text' },
-              { key: 'facility', label: 'Primary Facility', type: 'text' },
-              { key: 'status', label: 'Status', type: 'status' }
+              { key: 'is_active', label: 'Status', type: 'status' }
             ]}
-            data={[]}
           />
         );
 
@@ -130,13 +134,13 @@ function SaasAdminDashboard() {
           <MetadataCrud 
             title="Laboratory Test Catalog"
             entityName="Test"
+            endpoint="/lab/tests/"
             fields={[
               { key: 'name', label: 'Test Name', type: 'text' },
               { key: 'category', label: 'Category', type: 'text' },
-              { key: 'price', label: 'Standard Price', type: 'text' },
-              { key: 'status', label: 'Status', type: 'status' }
+              { key: 'price', label: 'Standard Price', type: 'number' },
+              { key: 'is_active', label: 'Status', type: 'status' }
             ]}
-            data={[]}
           />
         );
 
@@ -145,14 +149,73 @@ function SaasAdminDashboard() {
           <MetadataCrud 
             title="Drug & Medication Directory"
             entityName="Drug"
+            endpoint="/drugs/"
             fields={[
               { key: 'name', label: 'Generic Name', type: 'text' },
               { key: 'brand', label: 'Brand Name', type: 'text' },
               { key: 'form', label: 'Formulation', type: 'text' },
-              { key: 'status', label: 'Status', type: 'status' }
+              { key: 'is_active', label: 'Status', type: 'status' }
             ]}
-            data={[]}
           />
+        );
+
+      case 'Wards & Beds':
+        return (
+          <MetadataCrud 
+            title="Hospital Wards & Unit Capacity"
+            entityName="Ward"
+            endpoint="/wards/"
+            fields={[
+              { key: 'name', label: 'Ward Name', type: 'text' },
+              { key: 'code', label: 'Ward Code', type: 'text' },
+              { key: 'capacity', label: 'Bed Capacity', type: 'number' },
+              { key: 'is_active', label: 'Status', type: 'status' }
+            ]}
+          />
+        );
+
+      case 'Billable Services':
+        return (
+          <MetadataCrud 
+            title="Global Service Catalog"
+            entityName="Service"
+            endpoint="/billing/services/"
+            fields={[
+              { key: 'name', label: 'Service Name', type: 'text' },
+              { key: 'code', label: 'Internal Code', type: 'text' },
+              { key: 'default_price', label: 'Base Price', type: 'number' },
+              { key: 'category', label: 'Category', type: 'text' }
+            ]}
+          />
+        );
+
+      case 'Tax Types':
+        return (
+          <MetadataCrud 
+            title="Taxation Configuration"
+            entityName="Tax"
+            endpoint="/tax/types/"
+            fields={[
+              { key: 'name', label: 'Tax Name', type: 'text' },
+              { key: 'rate', label: 'Percentage (%)', type: 'number' },
+              { key: 'code', label: 'Tax Code', type: 'text' },
+              { key: 'is_active', label: 'Status', type: 'status' }
+            ]}
+          />
+        );
+
+      case 'Facilities':
+      case 'Staff Management':
+      case 'Payroll Config':
+      case 'Leave & Attendance':
+        return (
+          <div className="flex flex-col items-center justify-center py-20 text-slate-400">
+            <div className="w-20 h-20 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center mb-4">
+              <Database size={40} className="opacity-20" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Global Configuration Coming Soon</h3>
+            <p>The global catalog for {activeTab} is being indexed.</p>
+          </div>
         );
 
       default:

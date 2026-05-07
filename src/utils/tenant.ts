@@ -8,10 +8,32 @@ export const getTenantCode = (): string | null => {
     return parts[0];
   }
 
-  // 2. Fallback to localStorage (for development or non-subdomain testing)
-  return localStorage.getItem('tenant_code');
+  // 2. Check localStorage/sessionStorage
+  const stored = localStorage.getItem('tenant_code') || sessionStorage.getItem('tenant_code');
+  if (stored) return stored;
+
+  // 3. Try to extract from JWT if available
+  const token = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
+  if (token) {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const payload = JSON.parse(window.atob(base64));
+      return payload.tenant_code || null;
+    } catch (e) {
+      console.error('Failed to parse JWT for tenant_code', e);
+    }
+  }
+
+  return null;
 };
 
 export const setTenantCode = (code: string) => {
   localStorage.setItem('tenant_code', code);
+  sessionStorage.setItem('tenant_code', code);
+};
+
+export const getTenantDomain = (): string | null => {
+  const hostname = window.location.hostname;
+  return hostname.includes('carepointhms.com') ? hostname : null;
 };

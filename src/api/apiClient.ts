@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getTenantCode } from '../utils/tenant';
+import { getTenantCode, getTenantDomain } from '../utils/tenant';
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'https://carepoint-hms.onrender.com/api/v1',
@@ -8,10 +8,10 @@ const apiClient = axios.create({
   },
 });
 
-// Request Interceptor: Add Auth Token and Tenant Code
+// Request Interceptor: Add Auth Token and Tenant Headers
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -19,6 +19,11 @@ apiClient.interceptors.request.use(
     const tenantCode = getTenantCode();
     if (tenantCode) {
       config.headers['X-Tenant-Code'] = tenantCode;
+    }
+
+    const tenantDomain = getTenantDomain();
+    if (tenantDomain) {
+      config.headers['X-Tenant-Domain'] = tenantDomain;
     }
 
     return config;
@@ -35,7 +40,8 @@ apiClient.interceptors.response.use(
     // If 401 Unauthorized and not already retrying
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const refreshToken = localStorage.getItem('refresh_token');
+      const refreshToken = localStorage.getItem('refresh_token') || sessionStorage.getItem('refresh_token');
+      const storage = localStorage.getItem('refresh_token') ? localStorage : sessionStorage;
 
       if (refreshToken) {
         try {
@@ -45,7 +51,7 @@ apiClient.interceptors.response.use(
           });
 
           const { access_token } = response.data;
-          localStorage.setItem('access_token', access_token);
+          storage.setItem('access_token', access_token);
 
           originalRequest.headers.Authorization = `Bearer ${access_token}`;
           return apiClient(originalRequest);
@@ -53,6 +59,10 @@ apiClient.interceptors.response.use(
           // Refresh token expired or invalid
           localStorage.removeItem('access_token');
           localStorage.removeItem('refresh_token');
+          localStorage.removeItem('auth_user_data');
+          sessionStorage.removeItem('access_token');
+          sessionStorage.removeItem('refresh_token');
+          sessionStorage.removeItem('auth_user_data');
           window.location.href = '/login';
         }
       }

@@ -28,16 +28,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem('access_token');
+      const token = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
+      const storedData = localStorage.getItem('auth_user_data') || sessionStorage.getItem('auth_user_data');
+
       if (token) {
         try {
+          // Decode JWT for role detection
+          const base64Url = token.split('.')[1];
+          const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+          const jwtPayload = JSON.parse(window.atob(base64));
+          const isSaaS = jwtPayload.is_saas_admin || jwtPayload.role === 'SAAS_ADMIN';
+
+          // If we have stored data, use it for immediate UI update
+          if (storedData) {
+            const data = JSON.parse(storedData);
+            const userData = data.user || data;
+            setUser(userData);
+            setIsSaasAdmin(isSaaS || !!data.admin_id);
+          }
+
           const response = await apiClient.get('/auth/me');
           const userData = response.data.user || response.data;
           setUser(userData);
-          setIsSaasAdmin(userData.is_superuser || !!userData.is_saas_admin);
+          setIsSaasAdmin(isSaaS || !!userData.is_saas_admin || userData.role === 'SAAS_ADMIN' || !!response.data.admin_id);
         } catch (error) {
           localStorage.removeItem('access_token');
           localStorage.removeItem('refresh_token');
+          localStorage.removeItem('auth_user_data');
+          sessionStorage.removeItem('access_token');
+          sessionStorage.removeItem('refresh_token');
+          sessionStorage.removeItem('auth_user_data');
         }
       }
       setIsLoading(false);
@@ -48,28 +68,54 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (credentials: any) => {
     const response = await apiClient.post('/auth/login', credentials);
-    const { tokens, user: userData, admin_id } = response.data;
+    const data = response.data;
+    const { access_token, refresh_token, tokens, remember_me } = data;
     
-    localStorage.setItem('access_token', tokens?.access_token || response.data.access_token);
-    if (tokens?.refresh_token || response.data.refresh_token) {
-      localStorage.setItem('refresh_token', tokens?.refresh_token || response.data.refresh_token);
+    // Determine storage based on remember_me
+    const storage = credentials.remember_me || remember_me ? localStorage : sessionStorage;
+    
+    const accessToken = tokens?.access_token || access_token;
+    const refreshToken = tokens?.refresh_token || refresh_token;
+
+    storage.setItem('access_token', accessToken);
+    if (refreshToken) {
+      storage.setItem('refresh_token', refreshToken);
     }
     
-    const finalUser = userData || { 
-      id: admin_id, 
-      email: response.data.email, 
-      first_name: response.data.first_name, 
-      last_name: response.data.last_name,
-      is_superuser: true 
+    // Decode JWT to get role and extra info
+    let jwtPayload: any = {};
+    try {
+      const base64Url = accessToken.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      jwtPayload = JSON.parse(window.atob(base64));
+    } catch (e) {
+      console.error('Failed to decode JWT', e);
+    }
+
+    // Store entire login response for quick access
+    storage.setItem('auth_user_data', JSON.stringify(data));
+    
+    const isSaaS = jwtPayload.is_saas_admin || jwtPayload.role === 'SAAS_ADMIN' || !!data.admin_id;
+
+    const finalUser = data.user || { 
+      id: data.admin_id || data.id || jwtPayload.sub, 
+      email: data.email || jwtPayload.email, 
+      first_name: data.first_name, 
+      last_name: data.last_name,
+      is_superuser: isSaaS
     };
     
     setUser(finalUser);
-    setIsSaasAdmin(finalUser.is_superuser || !!finalUser.is_saas_admin || !!admin_id);
+    setIsSaasAdmin(isSaaS);
   };
 
   const logout = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
+    localStorage.removeItem('auth_user_data');
+    sessionStorage.removeItem('access_token');
+    sessionStorage.removeItem('refresh_token');
+    sessionStorage.removeItem('auth_user_data');
     setUser(null);
     setIsSaasAdmin(false);
   };

@@ -1,24 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import apiClient from '../../api/apiClient';
-import { Stethoscope, Plus, Loader2, Clock, FileText, ChevronRight } from 'lucide-react';
+import { Stethoscope, Plus, Search, Edit2, Loader2, User, Clock, FileText, CheckCircle2, XCircle } from 'lucide-react';
+
+interface Consultation {
+  id: number;
+  patient_name: string;
+  doctor_name: string;
+  consultation_date: string;
+  status: string;
+  symptoms: string;
+  diagnosis: string;
+}
 
 const ConsultationList: React.FC = () => {
-  const [consultations, setConsultations] = useState<any[]>([]);
+  const [consultations, setConsultations] = useState<Consultation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const fetchConsultations = async () => {
+    try {
+      const response = await apiClient.get('/consultations/');
+      setConsultations(Array.isArray(response.data) ? response.data : response.data.data || []);
+    } catch (error) {
+      console.error('Failed to fetch consultations', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchConsultations = async () => {
-      try {
-        const response = await apiClient.get('/clinical/consultations');
-        setConsultations(response.data.results || []);
-      } catch (error) {
-        console.error('Failed to fetch consultations', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
     fetchConsultations();
   }, []);
+
+  const filteredConsultations = consultations.filter(c => 
+    c.patient_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    c.doctor_name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (isLoading) {
     return (
@@ -29,11 +46,11 @@ const ConsultationList: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 animate-fadeIn">
+    <div className="space-y-6">
       <div className="flex justify-between items-end">
         <div>
-          <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Clinical Consultations</h3>
-          <p className="text-slate-500 dark:text-slate-400">Track and manage active patient consultations and diagnoses.</p>
+          <h3 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Clinical Consultations</h3>
+          <p className="text-slate-500 dark:text-slate-400">Track patient visits, diagnoses, and treatment plans.</p>
         </div>
         <button className="flex items-center gap-2 px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-primary-600/20">
           <Plus size={20} />
@@ -42,46 +59,47 @@ const ConsultationList: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-4">
-        {consultations.map((cons) => (
-          <div key={cons.id} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 flex items-center gap-6 hover:shadow-md transition-all group">
-            <div className="bg-primary-50 dark:bg-primary-900/20 p-4 rounded-2xl text-primary-600">
-              <Stethoscope size={24} />
+        {filteredConsultations.map((c) => (
+          <div key={c.id} className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 flex items-center justify-between group hover:border-primary-500/30 transition-all">
+            <div className="flex items-center gap-6">
+               <div className="w-14 h-14 bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-400 group-hover:text-primary-600 transition-colors">
+                  <Stethoscope size={28} />
+               </div>
+               <div>
+                  <h4 className="font-black text-slate-900 dark:text-white flex items-center gap-2">
+                    {c.patient_name}
+                    <span className={`text-[10px] px-2 py-0.5 rounded-lg uppercase tracking-widest ${c.status === 'finalized' ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600'}`}>
+                      {c.status}
+                    </span>
+                  </h4>
+                  <p className="text-xs font-bold text-slate-500 flex items-center gap-1 mt-1">
+                    <User size={12} /> {c.doctor_name} • <Clock size={12} /> {new Date(c.consultation_date).toLocaleDateString()}
+                  </p>
+               </div>
             </div>
-            <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
-              <div className="flex flex-col">
-                <span className="text-xs text-slate-500 font-medium">Patient</span>
-                <span className="font-bold text-slate-900 dark:text-white">{cons.patient_name || 'Sarah Jenkins'}</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xs text-slate-500 font-medium">Status</span>
-                <span className="flex items-center gap-1.5 text-xs font-bold text-amber-600 bg-amber-50 dark:bg-amber-900/20 px-2 py-1 rounded-lg w-fit mt-1">
-                  <Clock size={12} /> {cons.status || 'In Progress'}
-                </span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xs text-slate-500 font-medium">Doctor</span>
-                <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Dr. Nelson Attah</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xs text-slate-500 font-medium">Started</span>
-                <span className="text-sm text-slate-600 dark:text-slate-400">14 mins ago</span>
-              </div>
+            
+            <div className="flex items-center gap-8 text-right">
+               <div className="hidden md:block">
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Presumptive Diagnosis</p>
+                  <p className="text-sm font-bold text-slate-700 dark:text-slate-300">{c.diagnosis || 'Pending'}</p>
+               </div>
+               <button className="p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-primary-600 transition-all">
+                  <FileText size={20} />
+               </button>
             </div>
-            <button className="p-3 bg-slate-50 dark:bg-slate-800 rounded-xl text-slate-400 group-hover:bg-primary-600 group-hover:text-white transition-all">
-              <ChevronRight size={20} />
-            </button>
           </div>
         ))}
-
-        {consultations.length === 0 && (
-           <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-12 text-center">
-              <div className="w-16 h-16 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                 <FileText size={32} className="text-slate-300" />
-              </div>
-              <p className="text-slate-500">No active consultations at the moment.</p>
-           </div>
-        )}
       </div>
+
+      {consultations.length === 0 && (
+        <div className="bg-white dark:bg-slate-900 rounded-[3rem] border-2 border-dashed border-slate-200 dark:border-slate-800 p-20 text-center">
+           <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800 rounded-3xl flex items-center justify-center mx-auto mb-6 text-slate-300">
+              <Stethoscope size={40} />
+           </div>
+           <h4 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">Clinical Log Empty</h4>
+           <p className="text-slate-500 mt-2 max-w-xs mx-auto">No consultations have been recorded today. Select a patient to begin a clinical session.</p>
+        </div>
+      )}
     </div>
   );
 };
