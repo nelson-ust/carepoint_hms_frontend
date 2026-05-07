@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import apiClient from '../../api/apiClient';
-import { Users, Plus, Search, Edit2, Trash2, Loader2, User, Phone, Mail, X, Check, Calendar } from 'lucide-react';
+import { Plus, Search, Edit2, Loader2, User, Phone, Mail, X } from 'lucide-react';
 
 interface Patient {
   id: number;

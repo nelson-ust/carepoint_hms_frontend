@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import apiClient from '../../api/apiClient';
-import { Stethoscope, Plus, Search, Edit2, Loader2, User, Clock, FileText, CheckCircle2, XCircle } from 'lucide-react';
+import { Stethoscope, Plus, Loader2, User, Clock, FileText } from 'lucide-react';
 
 interface Consultation {
   id: number;
@@ -15,7 +15,7 @@ interface Consultation {
 const ConsultationList: React.FC = () => {
   const [consultations, setConsultations] = useState<Consultation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm] = useState('');
 
   const fetchConsultations = async () => {
     try {

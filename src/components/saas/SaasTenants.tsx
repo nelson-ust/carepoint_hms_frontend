@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import apiClient from '../../api/apiClient';
-import { Search, Filter, MoreVertical, Globe, Shield, CreditCard, Loader2, X, Check, Lock } from 'lucide-react';
+import { Search, Filter, MoreVertical, Globe, Shield, Loader2, X, Lock } from 'lucide-react';
 
 interface Tenant {
   id: number;

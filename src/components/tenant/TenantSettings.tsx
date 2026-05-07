@@ -17,7 +17,7 @@ const TenantSettings: React.FC = () => {
     try {
       const response = await apiClient.get('/settings');
       if (response.data) {
-        setSettings(prev => ({ ...prev, ...response.data }));
+        setSettings((prev: any) => ({ ...prev, ...response.data }));
       }
     } catch (error) {
       console.error('Failed to fetch settings', error);

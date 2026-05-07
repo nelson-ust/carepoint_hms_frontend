@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import apiClient from '../../api/apiClient';
-import { Receipt, Plus, Search, Download, Loader2, User, CreditCard, Clock, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { Receipt, Plus, Search, Download, Loader2, User, CreditCard } from 'lucide-react';
 
 interface Invoice {
   id: number;

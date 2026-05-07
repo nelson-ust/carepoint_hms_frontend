@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import apiClient from '../../api/apiClient';
-import { Database, Plus, Trash2, Shield, Loader2, Server, Terminal, Copy, CheckCircle2 } from 'lucide-react';
+import { Plus, Trash2, Loader2, Server, Terminal, Copy, CheckCircle2 } from 'lucide-react';
 
 interface EdgeNode {
   id: number;

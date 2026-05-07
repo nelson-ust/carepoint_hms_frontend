@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import apiClient from '../../api/apiClient';
-import { Shield, Loader2, X, Check, Clock, User, Building2, AlertCircle } from 'lucide-react';
+import { Shield, Loader2, Clock, User, Building2 } from 'lucide-react';
 
 interface SupportGrant {
   id: number;

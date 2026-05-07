@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import apiClient from '../../api/apiClient';
-import { Building2, Plus, Edit2, Trash2, Loader2, Wrench, X, Check, LayoutGrid } from 'lucide-react';
+import { Building2, Plus, Edit2, Trash2, Loader2, X, LayoutGrid } from 'lucide-react';
 
 interface Facility {
   id: number;
