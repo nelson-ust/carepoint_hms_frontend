@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getTenantCode } from '../utils/tenant';
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8005/api/v1',
+  baseURL: import.meta.env.VITE_API_URL || 'https://carepoint-hms.onrender.com/api/v1',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -39,7 +39,7 @@ apiClient.interceptors.response.use(
 
       if (refreshToken) {
         try {
-          const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:8005/api/v1';
+          const baseURL = import.meta.env.VITE_API_URL || 'https://carepoint-hms.onrender.com/api/v1';
           const response = await axios.post(`${baseURL}/auth/refresh`, {
             refresh_token: refreshToken,
           });
