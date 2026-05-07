@@ -3,7 +3,6 @@ import {
   LayoutDashboard, 
   Users, 
   Calendar, 
-  ClipboardList, 
   Settings, 
   Moon, 
   Sun, 

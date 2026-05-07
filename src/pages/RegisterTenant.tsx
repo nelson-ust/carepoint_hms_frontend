@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Activity, Hospital, User, Globe, CreditCard, ChevronRight, CheckCircle2, Loader2, Mail, Phone, Lock } from 'lucide-react';
+import { Activity, Hospital, User, CreditCard, ChevronRight, CheckCircle2, Loader2, Mail, Lock } from 'lucide-react';
 import apiClient from '../api/apiClient';
 
 const RegisterTenant: React.FC = () => {

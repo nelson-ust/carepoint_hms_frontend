@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import apiClient from '../../api/apiClient';
-import { Plus, Edit2, Trash2, Check, X, Loader2 } from 'lucide-react';
+import { Plus, Edit2, Trash2, Check, X, Loader2, CreditCard } from 'lucide-react';
 
 interface Plan {
   id: number;

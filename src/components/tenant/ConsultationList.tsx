@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import apiClient from '../../api/apiClient';
-import { Stethoscope, Plus, Search, Filter, Loader2, User, Clock, FileText, ChevronRight } from 'lucide-react';
+import { Stethoscope, Plus, Loader2, Clock, FileText, ChevronRight } from 'lucide-react';
 
 const ConsultationList: React.FC = () => {
   const [consultations, setConsultations] = useState<any[]>([]);

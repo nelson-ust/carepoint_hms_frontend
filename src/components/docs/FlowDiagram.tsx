@@ -1,9 +1,8 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import ReactFlow, { 
   Background, 
   Controls, 
   MarkerType,
-  Position,
   type Node,
   type Edge,
 } from 'reactflow';

@@ -9,7 +9,6 @@ import {
   Bell, 
   Moon, 
   Sun,
-  Plus,
   Database,
   Users,
   Stethoscope,

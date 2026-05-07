@@ -5,14 +5,8 @@ import {
   Shield,
   Activity,
   Database,
-  Globe,
-  ChevronRight,
-  Layers,
   Zap,
   Lock,
-  FileText,
-  Workflow,
-  ArrowRight,
   Server,
   Cloud,
   Network
@@ -66,14 +60,6 @@ const Documentation: React.FC = () => {
     }
   ];
 
-  const connections = [
-    { from: 'Patient Registration', to: 'Visit Initiation', label: 'MPI Sync' },
-    { from: 'Visit Initiation', to: 'Clinical Triage', label: 'Queue Ticket' },
-    { from: 'Clinical Triage', to: 'Consultation', label: 'Vitals Push' },
-    { from: 'Consultation', to: 'Lab/Pharmacy Order', label: 'Charge Capture' },
-    { from: 'Lab/Pharmacy Order', to: 'Billing & Invoice', label: 'Service Link' },
-    { from: 'Billing & Invoice', to: 'Payment Reception', label: 'Ledger Entry' },
-  ];
 
   return (
     <div className="min-h-screen bg-[#05070a] text-slate-300 font-sans selection:bg-primary-500/30">

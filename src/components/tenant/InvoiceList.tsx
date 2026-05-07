@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import apiClient from '../../api/apiClient';
-import { CreditCard, Plus, Search, Filter, Loader2, User, CheckCircle2, AlertCircle, FileText, Download } from 'lucide-react';
+import { CreditCard, Plus, Loader2, FileText, Download } from 'lucide-react';
 
 const InvoiceList: React.FC = () => {
   const [invoices, setInvoices] = useState<any[]>([]);

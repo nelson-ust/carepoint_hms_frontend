@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import apiClient from '../../api/apiClient';
-import { Settings, Image as ImageIcon, Save, Loader2, Globe, Mail, CreditCard, Database } from 'lucide-react';
+import { Settings, Image as ImageIcon, Save, Loader2, Mail, CreditCard, Database } from 'lucide-react';
 
 const TenantSettings: React.FC = () => {
   const [activeSubTab, setActiveSubTab] = useState('General');
   const [isLoading, setIsLoading] = useState(true);
-  const [settings, setSettings] = useState<any>(null);
 
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const response = await apiClient.get('/settings');
-        setSettings(response.data);
+        await apiClient.get('/settings');
+        // Data could be used here in the future
       } catch (error) {
         console.error('Failed to fetch settings', error);
       } finally {

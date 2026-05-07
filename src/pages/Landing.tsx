@@ -8,8 +8,7 @@ import {
   ShieldCheck,
   BarChart3,
   Zap,
-  Globe,
-  Lock
+  Globe
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
