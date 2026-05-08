@@ -1,26 +1,60 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Activity, Mail, Lock, AlertCircle, Loader2, Eye, EyeOff } from 'lucide-react';
+import { Activity, Mail, Lock, AlertCircle, Loader2, Eye, EyeOff, Building2 } from 'lucide-react';
+import { useTenant } from '../context/TenantContext';
 
 const Login: React.FC = () => {
   const { login } = useAuth();
+  const { tenantCode: detectedTenantCode, tenantConfig, isTenantDomain } = useTenant();
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
+  const [tenantCode, setTenantCode] = useState(detectedTenantCode || '');
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Sync tenant code from detected subdomain if it changes
+  React.useEffect(() => {
+    if (detectedTenantCode) {
+      setTenantCode(detectedTenantCode);
+    }
+  }, [detectedTenantCode]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
 
+    console.log('[Login] Attempting login for identifier:', identifier, 'Tenant:', tenantCode);
     try {
-      await login({ identifier, password, remember_me: rememberMe });
+      // Set the tenant code in storage so the apiClient interceptor picks it up for the X-Tenant-Code header
+      if (tenantCode) {
+        localStorage.setItem('tenant_code', tenantCode.toUpperCase());
+        sessionStorage.setItem('tenant_code', tenantCode.toUpperCase());
+      }
+
+      await login({ 
+        identifier, 
+        password, 
+        remember_me: rememberMe 
+      });
+      console.log('[Login] Login successful');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Invalid credentials. Please try again.');
+      console.error('[Login] Login failed:', err);
+      let errorMessage = 'Invalid credentials. Please try again.';
+      
+      const detail = err.response?.data?.detail || err.response?.data?.message;
+      if (typeof detail === 'string') {
+        errorMessage = detail;
+      } else if (Array.isArray(detail)) {
+        errorMessage = detail.map(d => typeof d === 'string' ? d : (d.msg || JSON.stringify(d))).join(', ');
+      } else if (typeof detail === 'object' && detail !== null) {
+        errorMessage = detail.msg || JSON.stringify(detail);
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -41,7 +75,9 @@ const Login: React.FC = () => {
         {/* Card */}
         <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800">
           <div className="mb-8">
-            <h2 className="text-xl font-bold text-slate-800 dark:text-white">Welcome Back</h2>
+            <h2 className="text-xl font-bold text-slate-800 dark:text-white">
+              Welcome Back {tenantConfig?.name ? `to ${tenantConfig.name}` : ''}
+            </h2>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Please enter your details to sign in</p>
           </div>
 
@@ -66,6 +102,24 @@ const Login: React.FC = () => {
                   onChange={(e) => setIdentifier(e.target.value)}
                   className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl py-3 pl-10 pr-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all outline-none"
                   placeholder="name@hospital.com"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                Active Tenant Code
+              </label>
+              <div className="relative">
+                <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                <input
+                  type="text"
+                  required
+                  value={tenantCode}
+                  onChange={(e) => setTenantCode(e.target.value)}
+                  disabled={!!detectedTenantCode}
+                  className={`w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl py-3 pl-10 pr-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all outline-none ${!!detectedTenantCode ? 'opacity-70 cursor-not-allowed' : ''}`}
+                  placeholder="e.g. stmary"
                 />
               </div>
             </div>

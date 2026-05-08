@@ -67,8 +67,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (credentials: any) => {
+    console.log('[AuthContext] Initiating login request...');
     const response = await apiClient.post('/auth/login', credentials);
     const data = response.data;
+    console.log('[AuthContext] Login response received:', data);
+    
     const { access_token, refresh_token, tokens, remember_me } = data;
     
     // Determine storage based on remember_me
@@ -88,8 +91,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const base64Url = accessToken.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
       jwtPayload = JSON.parse(window.atob(base64));
+      console.log('[AuthContext] Decoded JWT Payload:', jwtPayload);
     } catch (e) {
-      console.error('Failed to decode JWT', e);
+      console.error('[AuthContext] Failed to decode JWT', e);
     }
 
     // Store entire login response for quick access
@@ -105,6 +109,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       is_superuser: isSaaS
     };
     
+    console.log('[AuthContext] Setting user state:', finalUser, 'Is SaaS Admin:', isSaaS);
     setUser(finalUser);
     setIsSaasAdmin(isSaaS);
   };

@@ -9,10 +9,13 @@ import SaasAdminDashboard from './pages/SaasAdminDashboard';
 import Documentation from './pages/Documentation';
 import { Loader2 } from 'lucide-react';
 
-const ProtectedRoute = ({ children, requireAdmin = false }: { children: React.ReactNode, requireAdmin?: boolean }) => {
-  const { isAuthenticated, isSaasAdmin, isLoading } = useAuth();
+import { useTenant } from './context/TenantContext';
 
-  if (isLoading) {
+const ProtectedRoute = ({ children, requireAdmin = false }: { children: React.ReactNode, requireAdmin?: boolean }) => {
+  const { isAuthenticated, isSaasAdmin, isLoading: authLoading } = useAuth();
+  const { isLoading: tenantLoading } = useTenant();
+
+  if (authLoading || tenantLoading) {
     return (
       <div className="h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
         <Loader2 className="animate-spin text-primary-600" size={40} />
@@ -33,12 +36,25 @@ const ProtectedRoute = ({ children, requireAdmin = false }: { children: React.Re
 
 function App() {
   const { isAuthenticated, isSaasAdmin } = useAuth();
+  const { isTenantDomain, isLoading: tenantLoading } = useTenant();
+
+  if (tenantLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+        <Loader2 className="animate-spin text-primary-600" size={40} />
+      </div>
+    );
+  }
 
   return (
     <Routes>
       <Route 
         path="/" 
-        element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Landing />} 
+        element={
+          isAuthenticated 
+            ? <Navigate to="/dashboard" replace /> 
+            : (isTenantDomain ? <Login /> : <Landing />)
+        } 
       />
       <Route 
         path="/login" 

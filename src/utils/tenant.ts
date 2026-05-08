@@ -3,14 +3,24 @@ export const getTenantCode = (): string | null => {
   const hostname = window.location.hostname;
   const parts = hostname.split('.');
   
-  // If we have at least 3 parts (e.g. acme.localhost or acme.carepointhms.com)
-  if (parts.length >= 2 && parts[0] !== 'www' && parts[0] !== 'localhost') {
-    return parts[0];
+  // If we have at least 2 parts and the first part is not a system domain
+  // If we have at least 2 parts
+  const systemSubdomains = ['www', 'localhost', 'carepointhms', 'api', 'admin'];
+  
+  let tenantPart = parts[0].toLowerCase();
+  
+  // If the first part is 'www', look at the second part
+  if (tenantPart === 'www' && parts.length >= 3) {
+    tenantPart = parts[1].toLowerCase();
+  }
+
+  if (!systemSubdomains.includes(tenantPart)) {
+    return tenantPart.toUpperCase();
   }
 
   // 2. Check localStorage/sessionStorage
   const stored = localStorage.getItem('tenant_code') || sessionStorage.getItem('tenant_code');
-  if (stored) return stored;
+  if (stored) return stored.toUpperCase();
 
   // 3. Try to extract from JWT if available
   const token = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
