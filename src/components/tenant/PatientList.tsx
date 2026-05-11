@@ -96,7 +96,7 @@ const PatientList: React.FC = () => {
         </div>
         <button 
           onClick={handleOpenCreate}
-          className="flex items-center gap-2 px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-primary-600/20"
+          className="flex items-center gap-2 px-6 py-2.5 bg-navy-900 hover:bg-navy-800 text-white rounded-xl font-bold transition-all shadow-lg shadow-navy-900/20"
         >
           <Plus size={20} />
           <span>Register Patient</span>
@@ -132,7 +132,7 @@ const PatientList: React.FC = () => {
                 <tr key={patient.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors group">
                   <td className="px-8 py-5">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center text-primary-600 font-black">
+                      <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center text-navy-600 font-black">
                         {patient.first_name.charAt(0)}{patient.last_name.charAt(0)}
                       </div>
                       <div>
@@ -161,7 +161,7 @@ const PatientList: React.FC = () => {
                   <td className="px-8 py-5 text-right">
                      <button 
                       onClick={() => handleOpenEdit(patient)}
-                      className="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-primary-600 transition-all opacity-0 group-hover:opacity-100"
+                      className="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-navy-600 transition-all opacity-0 group-hover:opacity-100"
                      >
                        <Edit2 size={18} />
                      </button>
@@ -180,7 +180,7 @@ const PatientList: React.FC = () => {
              <form onSubmit={handleSave}>
                 <div className="p-10 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
                    <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 bg-primary-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-primary-600/20">
+                      <div className="w-14 h-14 bg-navy-900 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-navy-900/20">
                          <User size={28} />
                       </div>
                       <div>
@@ -261,7 +261,7 @@ const PatientList: React.FC = () => {
 
                 <div className="p-10 bg-slate-50 dark:bg-slate-800/50 flex gap-4">
                    <button type="button" onClick={() => setActiveModal(null)} className="flex-1 px-8 py-5 rounded-[1.5rem] font-black uppercase tracking-widest text-xs border border-slate-200 dark:border-slate-700 hover:bg-white transition-all">Cancel</button>
-                   <button type="submit" disabled={isProcessing} className="flex-2 px-12 py-5 rounded-[1.5rem] bg-primary-600 hover:bg-primary-700 text-white font-black uppercase tracking-widest text-xs shadow-2xl shadow-primary-600/30 transition-all disabled:opacity-50">
+                   <button type="submit" disabled={isProcessing} className="flex-2 px-12 py-5 rounded-[1.5rem] bg-navy-900 hover:bg-navy-800 text-white font-black uppercase tracking-widest text-xs shadow-2xl shadow-navy-900/30 transition-all disabled:opacity-50">
                       {isProcessing ? 'Processing...' : 'Secure Record'}
                    </button>
                 </div>

@@ -55,14 +55,14 @@ const RegisterTenant: React.FC = () => {
           <p className="text-slate-500 dark:text-slate-400 mb-8">
             Your hospital instance has been provisioned. You can now access your dashboard at:
             <br />
-            <a href={subdomainUrl} className="text-primary-600 font-bold hover:underline break-all">
+            <a href={subdomainUrl} className="text-navy-900 font-bold hover:underline break-all">
               {subdomainUrl}
             </a>
           </p>
           <div className="space-y-3">
             <a 
               href={subdomainUrl}
-              className="block w-full bg-primary-600 hover:bg-primary-700 text-white rounded-xl py-3 font-bold transition-all text-center"
+              className="block w-full bg-navy-900 hover:bg-navy-800 text-white rounded-xl py-3 font-bold transition-all text-center"
             >
               Go to Dashboard
             </a>
@@ -83,7 +83,7 @@ const RegisterTenant: React.FC = () => {
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <div className="flex flex-col items-center mb-12">
-          <div className="bg-primary-600 p-3 rounded-2xl text-white shadow-xl shadow-primary-600/20 mb-4">
+          <div className="bg-navy-900 p-3 rounded-2xl text-white shadow-xl shadow-navy-900/20 mb-4">
             <Activity size={32} />
           </div>
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Join CarePoint</h1>
@@ -96,12 +96,12 @@ const RegisterTenant: React.FC = () => {
             <React.Fragment key={s}>
               <div className={`flex flex-col items-center gap-2 relative z-10`}>
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all duration-300 ${
-                  step === s ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/20 scale-110' : 
+                  step === s ? 'bg-navy-900 text-white shadow-lg shadow-navy-900/20 scale-110' : 
                   step > s ? 'bg-emerald-500 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-500'
                 }`}>
                   {step > s ? <CheckCircle2 size={20} /> : s}
                 </div>
-                <span className={`text-xs font-bold ${step === s ? 'text-primary-600' : 'text-slate-400'}`}>
+                <span className={`text-xs font-bold ${step === s ? 'text-navy-900' : 'text-slate-400'}`}>
                   {s === 1 ? 'Hospital' : s === 2 ? 'Admin' : 'Plan'}
                 </span>
               </div>
@@ -119,7 +119,7 @@ const RegisterTenant: React.FC = () => {
             {step === 1 && (
               <div className="space-y-6 animate-fadeIn">
                 <div className="flex items-center gap-3 mb-6">
-                  <Hospital className="text-primary-600" size={24} />
+                  <Hospital className="text-navy-900" size={24} />
                   <h3 className="text-xl font-bold text-slate-900 dark:text-white">Hospital Information</h3>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -140,7 +140,11 @@ const RegisterTenant: React.FC = () => {
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Billing Email</label>
-                    <input type="email" name="billing_email" value={formData.billing_email} onChange={handleChange} required className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-primary-500 transition-all dark:text-white" placeholder="billing@hospital.com" />
+                    <input type="email" name="billing_email" value={formData.billing_email} onChange={handleChange} required className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-navy-500 transition-all dark:text-white" placeholder="billing@hospital.com" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Tax ID / Registration No.</label>
+                    <input name="tax_id" value={(formData as any).tax_id} onChange={handleChange} className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-navy-500 transition-all dark:text-white" placeholder="CAC-1234567" />
                   </div>
                 </div>
                 <div className="space-y-2 pt-4">
@@ -154,7 +158,7 @@ const RegisterTenant: React.FC = () => {
             {step === 2 && (
               <div className="space-y-6 animate-fadeIn">
                 <div className="flex items-center gap-3 mb-6">
-                  <User className="text-primary-600" size={24} />
+                  <User className="text-navy-900" size={24} />
                   <h3 className="text-xl font-bold text-slate-900 dark:text-white">Admin Account Setup</h3>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -188,18 +192,18 @@ const RegisterTenant: React.FC = () => {
             {step === 3 && (
               <div className="space-y-6 animate-fadeIn text-center">
                 <div className="flex flex-col items-center gap-3 mb-8">
-                  <CreditCard className="text-primary-600" size={32} />
+                  <CreditCard className="text-navy-900" size={32} />
                   <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Choose Your Plan</h3>
                   <p className="text-slate-500">Select the package that fits your hospital size.</p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                    <div 
                     onClick={() => setFormData({...formData, plan_code: 'basic'})}
-                    className={`p-6 rounded-3xl border-2 cursor-pointer transition-all ${formData.plan_code === 'basic' ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/10' : 'border-slate-100 dark:border-slate-800 hover:border-slate-200'}`}
+                    className={`p-6 rounded-3xl border-2 cursor-pointer transition-all ${formData.plan_code === 'basic' ? 'border-navy-900 bg-navy-50 dark:bg-navy-900/10' : 'border-slate-100 dark:border-slate-800 hover:border-slate-200'}`}
                   >
                     <h4 className="font-bold text-lg text-slate-900 dark:text-white">Basic</h4>
                     <p className="text-slate-500 text-sm mb-4">Small clinics & private practices</p>
-                    <div className="text-2xl font-black text-primary-600 mb-4">$49<span className="text-sm font-normal text-slate-500">/mo</span></div>
+                    <div className="text-2xl font-black text-navy-900 mb-4">$49<span className="text-sm font-normal text-slate-500">/mo</span></div>
                     <ul className="text-sm text-slate-600 dark:text-slate-400 space-y-2 text-left">
                       <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-emerald-500" /> Up to 500 patients</li>
                       <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-emerald-500" /> 2 Facilities</li>
@@ -209,11 +213,11 @@ const RegisterTenant: React.FC = () => {
 
                   <div 
                     onClick={() => setFormData({...formData, plan_code: 'enterprise'})}
-                    className={`p-6 rounded-3xl border-2 cursor-pointer transition-all ${formData.plan_code === 'enterprise' ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/10' : 'border-slate-100 dark:border-slate-800 hover:border-slate-200'}`}
+                    className={`p-6 rounded-3xl border-2 cursor-pointer transition-all ${formData.plan_code === 'enterprise' ? 'border-navy-900 bg-navy-50 dark:bg-navy-900/10' : 'border-slate-100 dark:border-slate-800 hover:border-slate-200'}`}
                   >
                     <h4 className="font-bold text-lg text-slate-900 dark:text-white">Enterprise</h4>
                     <p className="text-slate-500 text-sm mb-4">Full-scale multi-ward hospitals</p>
-                    <div className="text-2xl font-black text-primary-600 mb-4">$199<span className="text-sm font-normal text-slate-500">/mo</span></div>
+                    <div className="text-2xl font-black text-navy-900 mb-4">$199<span className="text-sm font-normal text-slate-500">/mo</span></div>
                     <ul className="text-sm text-slate-600 dark:text-slate-400 space-y-2 text-left">
                       <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-emerald-500" /> Unlimited patients</li>
                       <li className="flex items-center gap-2"><CheckCircle2 size={16} className="text-emerald-500" /> Unlimited Facilities</li>
@@ -233,12 +237,12 @@ const RegisterTenant: React.FC = () => {
               )}
               
               {step < 3 ? (
-                <button type="button" onClick={nextStep} className="px-10 py-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold transition-all shadow-lg shadow-primary-600/20 flex items-center gap-2">
+                <button type="button" onClick={nextStep} className="px-10 py-3 rounded-xl bg-navy-900 hover:bg-navy-800 text-white font-bold transition-all shadow-lg shadow-navy-900/20 flex items-center gap-2">
                   <span>Continue</span>
                   <ChevronRight size={20} />
                 </button>
               ) : (
-                <button type="submit" disabled={isLoading} className="px-10 py-3 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold transition-all shadow-lg shadow-primary-600/20 flex items-center gap-2 disabled:opacity-70">
+                <button type="submit" disabled={isLoading} className="px-10 py-3 rounded-xl bg-navy-900 hover:bg-navy-800 text-white font-bold transition-all shadow-lg shadow-navy-900/20 flex items-center gap-2 disabled:opacity-70">
                   {isLoading ? (
                     <>
                       <Loader2 size={20} className="animate-spin" />

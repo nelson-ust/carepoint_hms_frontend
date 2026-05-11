@@ -40,7 +40,7 @@ const ConsultationList: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="animate-spin text-primary-600" size={32} />
+        <Loader2 className="animate-spin text-navy-600" size={32} />
       </div>
     );
   }
@@ -52,7 +52,7 @@ const ConsultationList: React.FC = () => {
           <h3 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Clinical Consultations</h3>
           <p className="text-slate-500 dark:text-slate-400">Track patient visits, diagnoses, and treatment plans.</p>
         </div>
-        <button className="flex items-center gap-2 px-6 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-primary-600/20">
+        <button className="flex items-center gap-2 px-6 py-2.5 bg-navy-900 hover:bg-navy-800 text-white rounded-xl font-bold transition-all shadow-lg shadow-navy-900/20">
           <Plus size={20} />
           <span>New Consultation</span>
         </button>
@@ -60,9 +60,9 @@ const ConsultationList: React.FC = () => {
 
       <div className="grid grid-cols-1 gap-4">
         {filteredConsultations.map((c) => (
-          <div key={c.id} className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 flex items-center justify-between group hover:border-primary-500/30 transition-all">
+          <div key={c.id} className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 flex items-center justify-between group hover:border-navy-500/30 transition-all">
             <div className="flex items-center gap-6">
-               <div className="w-14 h-14 bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-400 group-hover:text-primary-600 transition-colors">
+               <div className="w-14 h-14 bg-slate-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-400 group-hover:text-navy-600 transition-colors">
                   <Stethoscope size={28} />
                </div>
                <div>
@@ -83,7 +83,7 @@ const ConsultationList: React.FC = () => {
                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Presumptive Diagnosis</p>
                   <p className="text-sm font-bold text-slate-700 dark:text-slate-300">{c.diagnosis || 'Pending'}</p>
                </div>
-               <button className="p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-primary-600 transition-all">
+               <button className="p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-navy-900 transition-all">
                   <FileText size={20} />
                </button>
             </div>

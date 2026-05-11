@@ -16,14 +16,35 @@ apiClient.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
-    const tenantCode = getTenantCode();
-    if (tenantCode) {
-      config.headers['X-Tenant-Code'] = tenantCode;
+    // Only add tenant headers if NOT a SaaS Admin
+    // We check the token's payload for the role
+    let isSaasAdmin = false;
+    if (token) {
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const payload = JSON.parse(window.atob(base64));
+        isSaasAdmin = payload.is_saas_admin || payload.role === 'SAAS_ADMIN' || payload.roles?.includes('SAAS_ADMIN');
+      } catch (e) {
+        // Fallback to checking stored user data
+        const storedData = localStorage.getItem('auth_user_data') || sessionStorage.getItem('auth_user_data');
+        if (storedData) {
+          const data = JSON.parse(storedData);
+          isSaasAdmin = !!data.admin_id || data.user?.is_superuser;
+        }
+      }
     }
 
-    const tenantDomain = getTenantDomain();
-    if (tenantDomain) {
-      config.headers['X-Tenant-Domain'] = tenantDomain;
+    if (!isSaasAdmin) {
+      const tenantCode = getTenantCode();
+      if (tenantCode) {
+        config.headers['X-Tenant-Code'] = tenantCode;
+      }
+
+      const tenantDomain = getTenantDomain();
+      if (tenantDomain) {
+        config.headers['X-Tenant-Domain'] = tenantDomain;
+      }
     }
 
     return config;

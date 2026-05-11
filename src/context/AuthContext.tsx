@@ -48,9 +48,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
 
           const response = await apiClient.get('/auth/me');
-          const userData = response.data.user || response.data;
-          setUser(userData);
-          setIsSaasAdmin(isSaaS || !!userData.is_saas_admin || userData.role === 'SAAS_ADMIN' || !!response.data.admin_id);
+          const data = response.data;
+          const userData = data.user || data;
+          
+          const mappedUser: User = {
+            id: userData.admin_id || userData.id || jwtPayload.sub,
+            username: userData.username || userData.email || jwtPayload.email,
+            email: userData.email || jwtPayload.email,
+            first_name: userData.first_name || '',
+            last_name: userData.last_name || '',
+            is_superuser: isSaaS || !!userData.is_saas_admin || userData.role === 'SAAS_ADMIN' || !!data.admin_id
+          };
+
+          setUser(mappedUser);
+          setIsSaasAdmin(mappedUser.is_superuser);
         } catch (error) {
           localStorage.removeItem('access_token');
           localStorage.removeItem('refresh_token');
@@ -101,11 +112,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     const isSaaS = jwtPayload.is_saas_admin || jwtPayload.role === 'SAAS_ADMIN' || !!data.admin_id;
 
-    const finalUser = data.user || { 
+    const finalUser: User = data.user || { 
       id: data.admin_id || data.id || jwtPayload.sub, 
+      username: data.username || data.email || jwtPayload.email,
       email: data.email || jwtPayload.email, 
-      first_name: data.first_name, 
-      last_name: data.last_name,
+      first_name: data.first_name || '', 
+      last_name: data.last_name || '',
       is_superuser: isSaaS
     };
     

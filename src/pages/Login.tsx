@@ -27,12 +27,16 @@ const Login: React.FC = () => {
     setError('');
     setIsLoading(true);
 
-    console.log('[Login] Attempting login for identifier:', identifier, 'Tenant:', tenantCode);
+    console.log('[Login] Final payload verification - Identifier:', identifier, 'Tenant Code in state:', tenantCode);
+
     try {
-      // Set the tenant code in storage so the apiClient interceptor picks it up for the X-Tenant-Code header
-      if (tenantCode) {
+      // Set or clear the tenant code in storage so the apiClient interceptor picks it up
+      if (tenantCode && tenantCode.trim() !== '') {
         localStorage.setItem('tenant_code', tenantCode.toUpperCase());
         sessionStorage.setItem('tenant_code', tenantCode.toUpperCase());
+      } else {
+        localStorage.removeItem('tenant_code');
+        sessionStorage.removeItem('tenant_code');
       }
 
       await login({ 
@@ -65,7 +69,7 @@ const Login: React.FC = () => {
       <div className="max-w-md w-full">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="bg-primary-600 p-3 rounded-2xl text-white shadow-xl shadow-primary-600/20 mb-4">
+          <div className="bg-navy-900 p-3 rounded-2xl text-white shadow-xl shadow-navy-900/20 mb-4">
             <Activity size={32} />
           </div>
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white">CarePoint</h1>
@@ -100,7 +104,7 @@ const Login: React.FC = () => {
                   required
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl py-3 pl-10 pr-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all outline-none"
+                  className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl py-3 pl-10 pr-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-navy-500 transition-all outline-none"
                   placeholder="name@hospital.com"
                 />
               </div>
@@ -114,12 +118,11 @@ const Login: React.FC = () => {
                 <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                 <input
                   type="text"
-                  required
                   value={tenantCode}
                   onChange={(e) => setTenantCode(e.target.value)}
                   disabled={!!detectedTenantCode}
-                  className={`w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl py-3 pl-10 pr-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all outline-none ${!!detectedTenantCode ? 'opacity-70 cursor-not-allowed' : ''}`}
-                  placeholder="e.g. stmary"
+                  className={`w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl py-3 pl-10 pr-4 text-slate-900 dark:text-white focus:ring-2 focus:ring-navy-500 transition-all outline-none ${!!detectedTenantCode ? 'opacity-70 cursor-not-allowed' : ''}`}
+                  placeholder="e.g. stmary (Leave blank for Admin)"
                 />
               </div>
             </div>
@@ -129,7 +132,7 @@ const Login: React.FC = () => {
                 <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
                   Password
                 </label>
-                <a href="#" className="text-sm text-primary-600 hover:underline font-medium">
+                <a href="#" className="text-sm text-navy-600 hover:underline font-medium">
                   Forgot password?
                 </a>
               </div>
@@ -140,7 +143,7 @@ const Login: React.FC = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl py-3 pl-10 pr-12 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all outline-none"
+                  className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl py-3 pl-10 pr-12 text-slate-900 dark:text-white focus:ring-2 focus:ring-navy-500 transition-all outline-none"
                   placeholder="••••••••"
                 />
                 <button
@@ -160,7 +163,7 @@ const Login: React.FC = () => {
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-slate-300 dark:border-slate-700 rounded transition-all"
+                className="h-4 w-4 text-navy-600 focus:ring-navy-500 border-slate-300 dark:border-slate-700 rounded transition-all"
               />
               <label htmlFor="remember-me" className="ml-2 block text-sm text-slate-700 dark:text-slate-300">
                 Remember me
@@ -170,7 +173,7 @@ const Login: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-primary-600 hover:bg-primary-700 text-white rounded-xl py-3 font-bold transition-all shadow-lg shadow-primary-600/20 flex items-center justify-center gap-2 disabled:opacity-70"
+              className="w-full bg-navy-900 hover:bg-navy-800 text-white rounded-xl py-3 font-bold transition-all shadow-lg shadow-navy-900/20 flex items-center justify-center gap-2 disabled:opacity-70"
             >
               {isLoading ? (
                 <>
@@ -186,7 +189,7 @@ const Login: React.FC = () => {
           <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 text-center">
             <p className="text-sm text-slate-500 dark:text-slate-400">
               Not a member yet?{' '}
-              <Link to="/register" className="text-primary-600 font-bold hover:underline">
+              <Link to="/register" className="text-navy-900 font-bold hover:underline">
                 Register Your Hospital
               </Link>
             </p>

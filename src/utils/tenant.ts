@@ -14,13 +14,18 @@ export const getTenantCode = (): string | null => {
     tenantPart = parts[1].toLowerCase();
   }
 
-  if (!systemSubdomains.includes(tenantPart)) {
+  // Ensure tenantPart is a valid slug (no @, no dots)
+  const isValidSlug = /^[a-z0-9-]+$/.test(tenantPart);
+
+  if (isValidSlug && !systemSubdomains.includes(tenantPart)) {
     return tenantPart.toUpperCase();
   }
 
   // 2. Check localStorage/sessionStorage
   const stored = localStorage.getItem('tenant_code') || sessionStorage.getItem('tenant_code');
-  if (stored) return stored.toUpperCase();
+  if (stored && /^[A-Z0-9-]+$/.test(stored.toUpperCase())) {
+    return stored.toUpperCase();
+  }
 
   // 3. Try to extract from JWT if available
   const token = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');

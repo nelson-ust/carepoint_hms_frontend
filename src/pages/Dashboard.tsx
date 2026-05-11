@@ -8,13 +8,17 @@ import {
   Sun, 
   Search, 
   Bell, 
-  UserCircle,
-  Stethoscope,
-  Activity,
-  Plus,
-  LogOut,
   Building2,
-  CreditCard
+  CreditCard,
+  Pill,
+  Microscope,
+  Stethoscope as StethoscopeIcon,
+  Bed,
+  FileSearch,
+  Package,
+  TrendingUp,
+  ChevronRight,
+  Menu
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
@@ -25,26 +29,33 @@ import FacilitySetup from '../components/tenant/FacilitySetup';
 import PatientList from '../components/tenant/PatientList';
 import ConsultationList from '../components/tenant/ConsultationList';
 import InvoiceList from '../components/tenant/InvoiceList';
+import PharmacyList from '../components/tenant/PharmacyList';
+import LaboratoryList from '../components/tenant/LaboratoryList';
+import AdmissionList from '../components/tenant/AdmissionList';
 
 function Dashboard() {
   const { theme, toggleTheme } = useTheme();
   const { user, logout } = useAuth();
-  const [activeTab, setActiveTab] = useState('Dashboard');
+  const [activeTab, setActiveTab] = useState('Overview');
 
   const sidebarItems = [
-    { icon: LayoutDashboard, label: 'Dashboard' },
-    { icon: Building2, label: 'Facilities' },
+    { icon: LayoutDashboard, label: 'Overview' },
     { icon: Users, label: 'Patients' },
+    { icon: StethoscopeIcon, label: 'Consultations' },
+    { icon: Pill, label: 'Pharmacy' },
+    { icon: Microscope, label: 'Laboratory' },
+    { icon: FileSearch, label: 'Radiology' },
+    { icon: Bed, label: 'Admissions' },
+    { icon: CreditCard, label: 'Finance' },
+    { icon: Package, label: 'Inventory' },
+    { icon: Building2, label: 'Facilities' },
     { icon: Activity, label: 'Staff' },
-    { icon: Calendar, label: 'Appointments' },
-    { icon: Stethoscope, label: 'Consultations' },
-    { icon: CreditCard, label: 'Billing' },
     { icon: Settings, label: 'Settings' },
   ];
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'Dashboard':
+      case 'Overview':
         return <TenantOverview />;
       case 'Settings':
         return <TenantSettings />;
@@ -56,8 +67,16 @@ function Dashboard() {
         return <PatientList />;
       case 'Consultations':
         return <ConsultationList />;
-      case 'Billing':
+      case 'Finance':
         return <InvoiceList />;
+      case 'Pharmacy':
+        return <PharmacyList />;
+      case 'Laboratory':
+        return <LaboratoryList />;
+      case 'Admissions':
+        return <AdmissionList />;
+      case 'Radiology':
+      case 'Inventory':
       default:
         return (
           <div className="flex flex-col items-center justify-center py-20 text-slate-400">
@@ -76,10 +95,10 @@ function Dashboard() {
       {/* Sidebar */}
       <aside className="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 hidden md:flex flex-col">
         <div className="p-6 flex items-center gap-3">
-          <div className="bg-primary-600 p-2 rounded-lg text-white">
+          <div className="bg-navy-900 p-2 rounded-lg text-white">
             <Activity size={24} />
           </div>
-          <h1 className="text-xl font-bold text-slate-800 dark:text-white tracking-tight">CarePoint</h1>
+          <h1 className="text-xl font-bold text-navy-900 dark:text-white tracking-tight">CarePoint</h1>
         </div>
 
         <nav className="flex-1 px-4 py-4 space-y-1">
@@ -89,7 +108,7 @@ function Dashboard() {
               onClick={() => setActiveTab(item.label)}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
                 activeTab === item.label
-                  ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/20'
+                  ? 'bg-navy-900 text-white shadow-lg shadow-navy-900/20'
                   : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
@@ -146,7 +165,7 @@ function Dashboard() {
               <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
             </button>
             <div className="h-8 w-px bg-slate-200 dark:bg-slate-800 mx-2"></div>
-            <button className="flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-medium transition-all shadow-lg shadow-primary-600/20">
+            <button className="flex items-center gap-2 px-4 py-2 bg-navy-900 hover:bg-navy-800 text-white rounded-xl font-medium transition-all shadow-lg shadow-navy-900/20">
               <Plus size={20} />
               <span>{activeTab === 'Patients' ? 'Add Patient' : 'New Record'}</span>
             </button>
